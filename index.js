@@ -83,7 +83,7 @@ router.get('/s/:url', function* () {
 });
 
 router.get('/:url', function* (next) {
-  if(!url) {
+  if(this.params.url.length > 0) {
     let link = yield Link.findOne({ short_url: this.params.url });
     link.hits++;
     yield link.saveQ();
