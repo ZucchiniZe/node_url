@@ -83,4 +83,4 @@ router.get('/:url', function* () {
   this.redirect(link.long_url);
 });
 
-app.listen(3000);
+app.listen(port);
