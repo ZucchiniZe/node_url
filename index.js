@@ -5,12 +5,16 @@ const Router = require('koa-router');
 const views = require('koa-views');
 const bodyParser = require('koa-bodyparser');
 const mongoose = require('koa-mongoose');
+const url = require('url');
 
 const customMiddleware = require('./middleware.js');
 const Link = require('./models/Link.js');
 
 const app = koa();
 const router = Router();
+
+const port = process.env.PORT || 3000;
+const mongo = url.parse(process.env.MONGOLAB_URI);
 
 app.use(customMiddleware());
 
@@ -24,11 +28,11 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 app.use(mongoose({
-  user: '',
-  pass: '',
-  host: '127.0.0.1',
-  port: 27017,
-  database: 'link_shortener',
+  user: mongo.auth.split(':')[0] || '',
+  pass: mongo.auth.split(':')[1] || '',
+  host: mongo.hostname || '127.0.0.1',
+  port: mongo.port || 27017,
+  database: mongo.pathname || 'link_shortener',
   db: {
     native_parser: true
   },
@@ -38,7 +42,7 @@ app.use(mongoose({
 }));
 
 router.get('/', function* () {
-  this.state.hostname = this.hostname;
+  this.state.hostname = this.href;
   this.state.links = yield Link.find({}).limit(10);
   yield this.render('index');
 });
@@ -47,15 +51,19 @@ router.post('/', function* () {
   let url = this.request.body.url;
   let old_link = yield Link.findOne({ long_url: url });
 
-  this.body = `${this.hostname}/`;
+  this.body = this.href;
 
   if(!old_link) {
-    let link = new Link({
-      long_url: url
-    });
-    yield link.saveQ();
+    if(url.length > 0) {
+      let link = new Link({
+        long_url: url
+      });
+      yield link.saveQ();
 
-    this.body += link.short_url;
+      this.body += link.short_url;
+    } else {
+      this.body = 'at least give me a url';
+    }
   } else {
     old_link.creation_trys++;
     yield old_link.saveQ();

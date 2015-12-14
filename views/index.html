@@ -4,9 +4,17 @@
 
 <h1>ayyy, url shortener</h1>
 
+<p>
+  use either the form below or curl like so
+  <pre>
+  <code>curl -X POST -d 'url=https://some-long.domain/plus/some/more/longness' {{ hostname }}</code>
+  </pre>
+</p>
+
 <form method="post" action="">
   <label for="url">url</label>
   <input id="url" name="url" type="url" value=""/>
+  <input name="submit" type="submit" value="Submit"/>
 </form>
 
 {% if links %}
@@ -15,18 +23,10 @@
 <table>
   <tr>
     <th>long url</th>
-    <th>short url</th>
-    <th>hits</th>
-    <th>creation trys</th>
-    <th>date</th>
   </tr>
   {% endif %}
   <tr>
-    <td><a href="{{ link.long_url }}">{{ link.long_url }}</a></td>
-    <td><a href="http://{{ hostname }}/{{ link.short_url }}">{{ link.short_url }}</a></td>
-    <td>{{ link.hits }}</td>
-    <td>{{ link.creation_trys }}</td>
-    <td>{{ link.created_at.toString() }}</td>
+    <td><a href="{{ link.short_url }}">{{ link.long_url }}</a></td>
     <td><a href="/s/{{link.short_url}}">stats</a></td>
   </tr>
   {% if loop.last %}

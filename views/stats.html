@@ -5,7 +5,8 @@
 <h1>Stats for {{link.long_url}}</h1>
 
 <p>Long url: {{ link.long_url }}</p>
-<p>Short url: <a href="http://{{ hostname }}/{{ link.short_url }}">{{ link.short_url }}</a></p>
+<p>Created on: {{ link.created_at.toString() }}</p>
+<p>Short url: <a href="/{{ link.short_url }}">{{ link.short_url }}</a></p>
 <p>Hits: {{ link.hits }}</p>
 <p>Creation Trys: {{ link.creation_trys }}</p>
 
