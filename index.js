@@ -32,7 +32,7 @@ app.use(mongoose({
   pass: mongo.auth.split(':')[1] || '',
   host: mongo.hostname || '127.0.0.1',
   port: mongo.port || 27017,
-  database: mongo.pathname || 'link_shortener',
+  database: mongo.pathname.substring(0, 1) || 'link_shortener',
   db: {
     native_parser: true
   },
