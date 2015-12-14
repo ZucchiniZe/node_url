@@ -27,14 +27,12 @@ app.use(views('views', {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-console.log(mongo);
-
 app.use(mongoose({
   user: mongo.auth.split(':')[0] || '',
   pass: mongo.auth.split(':')[1] || '',
   host: mongo.hostname || '127.0.0.1',
   port: mongo.port || 27017,
-  database: mongo.pathname.substring(0, 1) || 'link_shortener',
+  database: mongo.pathname.slice(1) || 'link_shortener',
   db: {
     native_parser: true
   },
