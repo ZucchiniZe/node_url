@@ -27,6 +27,8 @@ app.use(views('views', {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+console.log(mongo);
+
 app.use(mongoose({
   user: mongo.auth.split(':')[0] || '',
   pass: mongo.auth.split(':')[1] || '',
