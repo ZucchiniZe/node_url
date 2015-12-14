@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h1>ayyy, url shortener</h1>
+
+<form method="post" action="">
+  <label for="url">url</label>
+  <input id="url" name="url" type="url" value=""/>
+</form>
+
+{% if links %}
+{% for link in links %}
+{% if loop.first %}
+<table>
+  <tr>
+    <th>long url</th>
+    <th>short url</th>
+    <th>hits</th>
+    <th>creation trys</th>
+    <th>date</th>
+  </tr>
+  {% endif %}
+  <tr>
+    <td><a href="{{ link.long_url }}">{{ link.long_url }}</a></td>
+    <td><a href="http://{{ hostname }}/{{ link.short_url }}">{{ link.short_url }}</a></td>
+    <td>{{ link.hits }}</td>
+    <td>{{ link.creation_trys }}</td>
+    <td>{{ link.created_at.toString() }}</td>
+    <td><a href="/s/{{link.short_url}}">stats</a></td>
+  </tr>
+  {% if loop.last %}
+</table>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% endblock %}

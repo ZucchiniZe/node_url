@@ -1,0 +1,22 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "koajs url shortener",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ajb",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^1.1.2",
+    "koa-bodyparser": "^2.0.1",
+    "koa-mongoose": "^1.0.9",
+    "koa-redis-pool": "^0.3.1",
+    "koa-router": "^5.3.0",
+    "koa-views": "^3.1.0",
+    "mongoose-q": "^0.1.0",
+    "shortid": "^2.2.4",
+    "swig": "^1.4.2"
+  }
+}
