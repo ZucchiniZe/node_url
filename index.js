@@ -49,7 +49,7 @@ app.use(mongoose({
 
 router.get('/', function* () {
   this.state.hostname = this.href;
-  this.state.links = yield Link.find({}).limit(10);
+  this.state.links = yield Link.find({}).limit(this.query.limit || 10);
   yield this.render('index');
 });
 
