@@ -14,7 +14,7 @@ const app = koa();
 const router = Router();
 
 const port = process.env.PORT || 3000;
-const mongo = url.parse(process.env.MONGOLAB_URI || 'mongodb://:@127.0.0.1:27017/link_shortener');
+let mongo = url.parse(process.env.MONGOLAB_URI || 'mongodb://:@127.0.0.1:27017/link_shortener');
 
 mongo.auth = {
   user: mongo.auth.split(':')[0],
@@ -50,20 +50,32 @@ app.use(mongoose({
 router.get('/', function* () {
   this.state.hostname = this.href;
   this.state.links = yield Link.find({}).limit(this.query.limit || 10);
+
   yield this.render('index');
 });
 
 router.post('/', function* () {
   let url = this.request.body.url;
+  let short = this.request.body.short;
   let old_link = yield Link.findOne({ long_url: url });
 
   this.body = this.href;
 
   if(!old_link) {
     if(url.length > 0) {
-      let link = new Link({
-        long_url: url
-      });
+      let link;
+
+      if(!short) {
+        link = new Link({
+          long_url: url
+        });
+      } else {
+        link = new Link({
+          long_url: url,
+          short_url: short
+        });
+      }
+
       yield link.saveQ();
 
       this.body += link.short_url;
@@ -73,6 +85,7 @@ router.post('/', function* () {
   } else {
     old_link.creation_trys++;
     yield old_link.saveQ();
+
     this.body += old_link.short_url;
   }
 });
@@ -85,8 +98,10 @@ router.get('/s/:url', function* () {
 router.get('/:url', function* (next) {
   if(this.params.url.length > 0) {
     let link = yield Link.findOne({ short_url: this.params.url });
+
     link.hits++;
     yield link.saveQ();
+
     this.redirect(link.long_url);
   } else {
     yield next;
