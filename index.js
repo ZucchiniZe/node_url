@@ -99,7 +99,7 @@ router.get('/s/:url', function* () {
 });
 
 router.get('/:url', function* (next) {
-  if(this.params.url.length > 0) {
+  if(this.params.url.length > 0 && this.params.url !== 'favicon.ico') {
     let link = yield Link.findOne({ short_url: this.params.url });
 
     link.hits++;
