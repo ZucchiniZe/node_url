@@ -49,7 +49,7 @@ app.use(mongoose({
 
 router.get('/', function* () {
   this.state.hostname = this.href;
-  this.state.links = yield Link.find({}).limit(this.query.limit || 10);
+  this.state.links = yield Link.find({}).limit(this.query.limit || 8).sort('-created_at');
 
   yield this.render('index');
 });
@@ -57,6 +57,7 @@ router.get('/', function* () {
 router.post('/', function* () {
   let url = this.request.body.url;
   let short = this.request.body.short;
+  let desc = this.request.body.desc;
   let old_link = yield Link.findOne({ long_url: url });
 
   this.body = this.href;
@@ -67,12 +68,14 @@ router.post('/', function* () {
 
       if(!short) {
         link = new Link({
-          long_url: url
+          long_url: url,
+          desc: desc
         });
       } else {
         link = new Link({
           long_url: url,
-          short_url: short
+          short_url: short,
+          desc: desc
         });
       }
 
